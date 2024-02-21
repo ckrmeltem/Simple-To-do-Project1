@@ -1,0 +1,42 @@
+//motoko giriş
+
+//import
+import Map "mo:base/HashMap";
+import Text "mo:base/Text";
+//import Nat "no:nase/Nat";
+
+//actor--> akıllı sözleşme
+actor {
+  type Name = Text;
+  type Phone = Text;
+
+  type Entry= {
+    desc:Text;
+    phone: Phone;
+  };
+
+  //değişkenler
+  //let-->immutable(değişmez)
+  //var-->mutable(değişebilir)
+  //const->...
+
+  let phonebook = Map.HashMap<Name, Entry>(0, Text.equal, Text.hash); //anahtar atmak map ile
+//text.hash kasa atmak? map: anahtar atmak
+// query =>sorgular
+//update=> geliştirme
+//async() => bütün işlemlerinin paralelde yapılması hızlı ve güvenli
+
+public func insert(name: Name, entry: Entry): async () {
+  phonebook.put(name, entry); //her isim eklediğimizde update etsin
+};
+
+//look -> if when while break
+
+public query func lookup(name: Name): async ?Entry { //?:textde olsa sayıda olsa bana dndür
+  phonebook.get(name)
+};
+//lookup kontrol sağ.isim gerçekten var mı yok mu
+
+
+};
+//ilk deneme
