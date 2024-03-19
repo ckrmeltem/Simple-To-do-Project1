@@ -1,0 +1,55 @@
+// Kullanıcıları temsil eden yapı
+type User = {
+  username : Text;
+  tasks : [Task];
+};
+
+// Yapılacak görevi temsil eden yapı
+type Task = {
+  description : Text;
+  deadline : Time; // Görevin son teslim tarihi
+  urgent : Bool; // Görevin aciliyeti
+  reminder : Time; // Görev için hatırlatma zamanı
+};
+
+// Akıllı sözleşme
+actor TodoList {
+  var users : [User] = []; // Kullanıcıları saklamak için dizi
+
+  // Yeni bir kullanıcı eklemek için fonksiyon
+  public func addUser(username: Text): async () {
+    let newUser = {username = username; tasks = []};
+    users := users # [newUser];
+  };
+
+  // Yeni bir görev eklemek için fonksiyon
+  public func addTask(username: Text, description: Text, deadline: Time, urgent: Bool, reminder: Time): async () {
+    let index = findUserIndex(username);
+    if (index != -1) {
+      let newTask = {description = description; deadline = deadline; urgent = urgent; reminder = reminder};
+      users.[index].tasks := users.[index].tasks # [newTask];
+    }
+  };
+
+  // Kullanıcının görevlerini getiren yardımcı fonksiyon
+  private func findUserIndex(username: Text): Int {
+    var index = -1;
+    for (i, user) in Array.iterate(users) {
+      if (user.username == username) {
+        index = i;
+        break;
+      }
+    }
+    index;
+  };
+
+  // Kullanıcının görevlerini listeleme fonksiyonu
+  public query func listTasks(username: Text): async [Task] {
+    let index = findUserIndex(username);
+    if (index != -1) {
+      users.[index].tasks;
+    } else {
+      [];
+    }
+  };
+};
